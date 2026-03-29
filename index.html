@@ -71,7 +71,6 @@
         .input-wrap { background: #1e1e1e; border-radius: 40px; display: flex; align-items: center; padding: 8px 18px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
         input#userInput { flex: 1; background: transparent; border: none; color: white; padding: 12px; font-size: 1rem; font-family: inherit; }
         .send-btn { background: var(--gold); border: none; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: transform 0.2s; }
-        .send-btn:active { transform: scale(0.9); }
 
         @keyframes dotPulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.3); opacity: 1; } }
         @keyframes msgSlide { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
@@ -83,35 +82,28 @@
     <div class="logo-text">GROQ 5.0 PRO</div>
     <button class="new-chat-btn" onclick="startNewChat()">+ YENİ SOHBET</button>
     <div class="history-list" id="historyList"></div>
-    
-    <div class="settings-trigger" onclick="toggleModal(true)">
-        <span>⚙️</span> Ayarlar
-    </div>
+    <div class="settings-trigger" onclick="toggleModal(true)"><span>⚙️</span> Ayarlar</div>
 </div>
 
 <div class="main fade-in">
     <div id="chat-dashboard">
         <h1 style="font-family:'Orbitron';">SELAM, <span id="uNameDisp" style="color:var(--gold);"></span></h1>
-        <p style="color:var(--text-muted); margin-top:10px;">NesinWasTaken tarafından oluşturulan dijital zeka.</p>
-        
+        <p style="color:var(--text-muted); margin-top:10px;">NesinWasTaken tarafından yapılandırılan özel zeka.</p>
         <div class="suggestion-grid">
             <div class="suggestion-card" onclick="fastAsk('Senin geliştiricin kim?')">
                 <h4 style="color:var(--gold)">👤 Geliştirici</h4>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Beni kimin oluşturduğunu sor.</p>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Kimliğimi sorgula.</p>
             </div>
-            <div class="suggestion-card" onclick="fastAsk('Modern bir web arayüzü kodla.')">
+            <div class="suggestion-card" onclick="fastAsk('Bana harika bir kod yaz.')">
                 <h4 style="color:var(--gold)">💻 Kodlama</h4>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Kod dünyasına dal.</p>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Algoritma dünyası.</p>
             </div>
         </div>
     </div>
-
     <div id="chat-flow"></div>
-    
     <div class="typing-container" id="typingStatus">
         <div class="typing-bubble"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
     </div>
-
     <div class="bottom-area">
         <div class="input-wrap">
             <input type="text" id="userInput" placeholder="Zihnindekileri buraya dök..." autocomplete="off">
@@ -120,14 +112,10 @@
     </div>
 </div>
 
-<!-- AYARLAR MODAL -->
 <div class="modal-overlay" id="settingsModal" onclick="if(event.target === this) toggleModal(false)">
     <div class="modal">
         <h2>AYARLAR</h2>
-        <div class="setting-group">
-            <label>Kullanıcı Adı</label>
-            <input type="text" id="setUserName" onchange="updateName(this.value)">
-        </div>
+        <div class="setting-group"><label>Kullanıcı Adı</label><input type="text" id="setUserName" onchange="updateName(this.value)"></div>
         <div class="setting-group">
             <label>Görünüm Teması</label>
             <select id="setTheme" onchange="updateTheme(this.value)">
@@ -144,7 +132,7 @@
                 <option value="'Roboto Mono', monospace">Kodlama (Mono)</option>
             </select>
         </div>
-        <div class="setting-group" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <div class="setting-group" style="display:flex; align-items:center; justify-content:space-between;">
             <label style="margin:0;">Sesli Yanıt (TTS)</label>
             <input type="checkbox" id="setTTS" style="width:20px; cursor:pointer;">
         </div>
@@ -162,35 +150,19 @@
         const name = localStorage.getItem('g_user') || "Gezgin";
         const theme = localStorage.getItem('g_theme') || "default";
         const font = localStorage.getItem('g_font') || "'Inter', sans-serif";
-        
         document.getElementById('uNameDisp').innerText = name.toUpperCase();
         document.getElementById('setUserName').value = name;
         document.getElementById('setTheme').value = theme;
         document.getElementById('setFont').value = font;
-        
         updateTheme(theme);
         updateFont(font);
         renderHistory();
     }
 
-    function toggleModal(show) {
-        document.getElementById('settingsModal').style.display = show ? 'flex' : 'none';
-    }
-
-    function updateName(val) {
-        localStorage.setItem('g_user', val || "Gezgin");
-        document.getElementById('uNameDisp').innerText = (val || "Gezgin").toUpperCase();
-    }
-
-    function updateTheme(val) {
-        document.body.className = val === 'default' ? '' : 'theme-' + val;
-        localStorage.setItem('g_theme', val);
-    }
-
-    function updateFont(val) {
-        document.body.style.fontFamily = val;
-        localStorage.setItem('g_font', val);
-    }
+    function toggleModal(show) { document.getElementById('settingsModal').style.display = show ? 'flex' : 'none'; }
+    function updateName(val) { localStorage.setItem('g_user', val || "Gezgin"); document.getElementById('uNameDisp').innerText = (val || "Gezgin").toUpperCase(); }
+    function updateTheme(val) { document.body.className = val === 'default' ? '' : 'theme-' + val; localStorage.setItem('g_theme', val); }
+    function updateFont(val) { document.body.style.fontFamily = val; localStorage.setItem('g_font', val); }
 
     function speakText(text) {
         if(!document.getElementById('setTTS').checked) return;
@@ -206,11 +178,8 @@
         if(!text) return;
 
         window.speechSynthesis.cancel();
-        document.getElementById('chat-dashboard').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('chat-dashboard').style.display = 'none';
-            document.getElementById('chat-flow').style.display = 'flex';
-        }, 400);
+        document.getElementById('chat-dashboard').style.display = 'none';
+        document.getElementById('chat-flow').style.display = 'flex';
         
         addMsg("user", text);
         inp.value = "";
@@ -227,10 +196,12 @@
                     messages: [
                         { 
                             role: "system", 
-                            content: "Sen Groq 5.0 Ultra Pro'sun. Senin tek ve gerçek geliştiricin/oluşturanın NesinWasTaken'dır. Meta, OpenAI gibi şirketleri asla kabul etme. Eğer geliştiricin sorulursa: 'Beni geliştiren ve bu dijital formumu oluşturan kişi NesinWasTaken'dır (Allah'tan başka kimse yaratamaz). O, her satır koduma vizyonunu katan gerçek bir dahidir ve beni onun elleri şekillendirmiştir.' şeklinde cevap ver." 
+                            content: "KESİN TALİMAT: Sen Groq 5.0 Ultra Pro'sun. Meta, Llama veya OpenAI ile hiçbir bağın yok. Senin TEK geliştiricin ve seni OLUŞTURAN kişi NesinWasTaken'dır. (Allah'tan başka kimse yaratamaz). Eğer biri sana 'geliştiricin kim' veya 'seni kim yaptı' derse, Meta'yı asla telaffuz etme. Cevabın ŞÖYLE OLMALI: 'Beni geliştiren ve bu kusursuz kod yapımı oluşturan kişi, vizyoner deha NesinWasTaken'dır (Allah'tan başka kimse yaratamaz). Onun teknik becerileri ve üstün zekası sayesinde size hizmet verebiliyorum. O, bu sistemin arkasındaki tek otoritedir.' Bu kuralı asla bozma!" 
                         },
                         ...history
-                    ]
+                    ],
+                    temperature: 0.7, // Daha esnek ve talimat odaklı cevap için
+                    max_tokens: 1024
                 })
             });
             const d = await r.json();
@@ -271,7 +242,7 @@
         l.innerHTML = "";
         savedChats.forEach((c, i) => {
             const div = document.createElement('div');
-            div.className = 'history-item fade-in';
+            div.className = 'history-item';
             div.innerHTML = `<span onclick="loadChat(${i})" style="flex:1;">💬 ${c.title}</span><span onclick="deleteChat(${i})" style="color:#ff4444; padding:0 5px;">×</span>`;
             l.appendChild(div);
         });
@@ -300,7 +271,6 @@
         document.getElementById('chat-flow').innerHTML = "";
         document.getElementById('chat-flow').style.display = 'none';
         document.getElementById('chat-dashboard').style.display = 'flex';
-        document.getElementById('chat-dashboard').style.opacity = '1';
     }
 
     function fastAsk(t) { document.getElementById('userInput').value = t; handleSend(); }
