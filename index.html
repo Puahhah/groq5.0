@@ -2,7 +2,8 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Groq 5.0 Ultra - NesinWasTaken Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groq 5.0 Ultra - NesinWasTaken</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4b88e; --bg: #050505; --sidebar: #0f0f0f; --card: #161616; --green: #00ff88; --red: #ff4444; }
@@ -22,17 +23,17 @@
         .main { flex: 1; display: flex; flex-direction: column; position: relative; background: radial-gradient(circle at center, #111 0%, #050505 100%); }
         #chat-flow { flex: 1; padding: 40px 18%; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; scrollbar-width: thin; }
         
-        .msg { position: relative; max-width: 90%; animation: slideUp 0.3s ease forwards; opacity: 0; }
+        .msg { position: relative; max-width: 90%; animation: slideUp 0.3s ease forwards; opacity: 0; display: flex; flex-direction: column; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
-        .user-box { align-self: flex-end; background: #1a1a1a; border: 1px solid #333; padding: 12px 18px; border-radius: 18px 18px 0 18px; color: var(--gold); }
-        .ai-box { align-self: flex-start; border-left: 3px solid var(--gold); padding-left: 15px; color: #e0e0e0; line-height: 1.6; }
+        .user-box { align-self: flex-end; background: #1a1a1a; border: 1px solid #333; padding: 12px 18px; border-radius: 18px 18px 0 18px; color: var(--gold); margin-bottom: 5px; }
+        .ai-box { align-self: flex-start; border-left: 3px solid var(--gold); padding: 10px 15px; color: #e0e0e0; line-height: 1.6; background: rgba(255,255,255,0.03); border-radius: 0 15px 15px 15px; }
         
         /* --- ALT GİRİŞ --- */
         .bottom-area { padding: 20px 18%; background: linear-gradient(transparent, var(--bg)); }
         .input-wrap { background: #1a1a1a; border: 1px solid #333; border-radius: 15px; display: flex; align-items: center; padding: 5px 15px; }
         .input-wrap input { flex: 1; background: transparent; border: none; color: #fff; padding: 12px; outline: none; font-size: 1rem; }
-        .send-btn { background: var(--gold); border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .send-btn { background: var(--gold); border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-weight: bold; color: #000; }
 
         /* Ayarlar Modalı */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; backdrop-filter: blur(5px); }
@@ -64,7 +65,7 @@
 
 <div class="main">
     <div id="chat-flow">
-        <div class="msg ai-msg">
+        <div class="msg">
             <div class="ai-box">
                 <b>Sistem Çevrimiçi.</b><br>
                 Merhaba! Ben NesinWasTaken tarafından optimize edilen özel asistanın. Her şey hazır, neyi çözelim?
@@ -82,13 +83,16 @@
 </div>
 
 <script>
-    // ANAHTARINI BURAYA GİZLEDİM (Base64 ile maskelendi)
-    const _m = "Z3NrX2xXS2xFOUtxM1F1QkhTYmx5dDVrV0dyeWIzRllQaXBVdU5Kd2Y3b29ZVHhEQTVMZHNtMlg=";
-    const API_KEY = atob(_m); 
+    // API ANAHTARI (Doğrudan Yerleştirildi)
+    const API_KEY = "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"; 
 
     const chatFlow = document.getElementById('chat-flow');
     const userInput = document.getElementById('userInput');
-    let chatHistory = [];
+    
+    // Hafıza için sistem mesajı
+    let chatHistory = [
+        { role: "system", content: "Senin adın Groq 5.0 Ultra. NesinWasTaken tarafından geliştirildin. Kısa, teknik ve zekice cevaplar ver." }
+    ];
 
     userInput.addEventListener("keypress", (e) => { if (e.key === "Enter") askAI(); });
 
@@ -106,16 +110,22 @@
         try {
             const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
-                headers: { "Authorization": `Bearer ${API_KEY}`, "Content-Type": "application/json" },
+                headers: { 
+                    "Authorization": `Bearer ${API_KEY}`, 
+                    "Content-Type": "application/json" 
+                },
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
-                    messages: [
-                        { role: "system", content: "Senin adın Groq 5.0 Ultra. NesinWasTaken tarafından geliştirildin. Kısa, teknik ve zekice cevaplar ver." },
-                        ...chatHistory.slice(-6)
-                    ],
-                    temperature: 0.6
+                    messages: chatHistory.slice(-10), // Son 10 mesaj hafızası
+                    temperature: 0.7
                 })
             });
+
+            if (!response.ok) {
+                const err = await response.json();
+                console.error("API Hatası:", err);
+                throw new Error("Bağlantı Hatası");
+            }
 
             const data = await response.json();
             const aiResponse = data.choices[0].message.content;
@@ -126,26 +136,40 @@
             if(document.getElementById('voiceToggle').checked) { speak(aiResponse); }
 
         } catch (error) {
-            addMessage("ai", "❌ Bağlantı hatası. Lütfen tekrar dene.");
+            console.error("Hata Detayı:", error);
+            addMessage("ai", "❌ Bağlantı hatası. Tarayıcı eklentisini (CORS) aktif ettiğinden veya internetini kontrol ettiğinden emin ol.");
         }
     }
 
     function addMessage(sender, text) {
         const div = document.createElement('div');
-        div.className = `msg ${sender === 'user' ? 'user-msg' : 'ai-msg'}`;
-        div.innerHTML = sender === 'user' 
-            ? `<div class="user-box">${text}</div>`
-            : `<div class="ai-box"><b>AI:</b><br>${text.replace(/\n/g, '<br>')}<br><span style="font-size:0.7rem; color:var(--gold); cursor:pointer;" onclick="speak('${text.replace(/'/g, "\\'")}')">🔊 Oku</span></div>`;
+        div.className = `msg`;
+        
+        if (sender === 'user') {
+            div.innerHTML = `<div class="user-box">${text}</div>`;
+        } else {
+            const safeText = text.replace(/\n/g, '<br>');
+            div.innerHTML = `
+                <div class="ai-box">
+                    <b>AI:</b><br>${safeText}<br>
+                    <span style="font-size:0.7rem; color:var(--gold); cursor:pointer; display:inline-block; margin-top:10px;" 
+                          onclick="speak(\`${text.replace(/`/g, "'")}\`)">🔊 Sesli Oku</span>
+                </div>`;
+        }
+        
         chatFlow.appendChild(div);
         chatFlow.scrollTop = chatFlow.scrollHeight;
     }
 
     function toggleSettings() {
         const m = document.getElementById('settingsModal');
-        m.style.display = m.style.display === "block" ? "none" : "block";
+        m.style.display = (m.style.display === "block") ? "none" : "block";
     }
 
-    function clearChat() { chatFlow.innerHTML = ""; chatHistory = []; }
+    function clearChat() { 
+        chatFlow.innerHTML = ""; 
+        chatHistory = [{ role: "system", content: "Senin adın Groq 5.0 Ultra..." }]; 
+    }
     
     function exportChat() {
         const text = chatHistory.map(m => `${m.role}: ${m.content}`).join('\n');
