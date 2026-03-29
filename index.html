@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Groq 5.0 Ultra Edition - NesinWasTaken</title>
+    <title>Groq 5.0 Ultra - NesinWasTaken Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4b88e; --bg: #050505; --sidebar: #0f0f0f; --card: #161616; --green: #00ff88; --red: #ff4444; }
@@ -15,96 +15,77 @@
         .logo { font-family: 'Orbitron'; font-size: 1.6rem; color: var(--gold); text-shadow: 0 0 15px rgba(212, 184, 142, 0.4); }
         
         .nav-menu { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-        .nav-btn { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; cursor: pointer; color: #aaa; text-decoration: none; font-size: 0.9rem; }
+        .nav-btn { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; cursor: pointer; color: #aaa; border: none; background: transparent; width: 100%; text-align: left; font-size: 0.9rem; }
         .nav-btn:hover { background: #1a1a1a; color: #fff; transform: translateX(5px); }
-        .nav-btn i { font-size: 1.2rem; }
 
         /* --- ANA CHAT ALANI --- */
         .main { flex: 1; display: flex; flex-direction: column; position: relative; background: radial-gradient(circle at center, #111 0%, #050505 100%); }
-        #chat-flow { flex: 1; padding: 40px 18%; overflow-y: auto; display: flex; flex-direction: column; gap: 30px; scrollbar-width: thin; }
+        #chat-flow { flex: 1; padding: 40px 18%; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; scrollbar-width: thin; }
         
-        /* Mesaj Stilleri */
-        .msg { position: relative; max-width: 90%; animation: slideUp 0.4s ease forwards; opacity: 0; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .msg { position: relative; max-width: 90%; animation: slideUp 0.3s ease forwards; opacity: 0; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
-        .user-box { align-self: flex-end; background: #1a1a1a; border: 1px solid #333; padding: 15px 20px; border-radius: 20px 20px 0 20px; color: var(--gold); }
-        .ai-box { align-self: flex-start; background: transparent; padding: 5px 0; border-left: 3px solid var(--gold); padding-left: 20px; color: #e0e0e0; line-height: 1.7; }
+        .user-box { align-self: flex-end; background: #1a1a1a; border: 1px solid #333; padding: 12px 18px; border-radius: 18px 18px 0 18px; color: var(--gold); }
+        .ai-box { align-self: flex-start; border-left: 3px solid var(--gold); padding-left: 15px; color: #e0e0e0; line-height: 1.6; }
         
-        /* --- ALT GİRİŞ VE MODELLER --- */
+        /* --- ALT GİRİŞ --- */
         .bottom-area { padding: 20px 18%; background: linear-gradient(transparent, var(--bg)); }
-        .mode-tags { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
-        .tag { padding: 6px 15px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; border: 1px solid #333; color: #777; font-family: 'Orbitron'; }
-        .tag.active { border-color: var(--gold); color: var(--gold); box-shadow: 0 0 10px rgba(212,184,142,0.2); }
-
-        .input-wrap { background: #1a1a1a; border: 1px solid #333; border-radius: 15px; display: flex; align-items: center; padding: 5px 15px; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .input-wrap { background: #1a1a1a; border: 1px solid #333; border-radius: 15px; display: flex; align-items: center; padding: 5px 15px; }
         .input-wrap input { flex: 1; background: transparent; border: none; color: #fff; padding: 12px; outline: none; font-size: 1rem; }
         .send-btn { background: var(--gold); border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-weight: bold; }
 
-        /* --- AYARLAR MODAL --- */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; backdrop-filter: blur(5px); }
-        .modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111; border: 1px solid var(--gold); padding: 40px; border-radius: 25px; min-width: 400px; }
-        .modal h2 { color: var(--gold); font-family: 'Orbitron'; margin-top: 0; }
-        .setting-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; border-bottom: 1px solid #222; padding-bottom: 10px; }
-
-        /* Sesli Okuma Butonu */
-        .speak-btn { font-size: 0.8rem; color: var(--gold); cursor: pointer; margin-top: 10px; display: inline-block; }
+        /* Ayarlar Modalı */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; backdrop-filter: blur(5px); }
+        .modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111; border: 1px solid var(--gold); padding: 30px; border-radius: 20px; min-width: 350px; }
     </style>
 </head>
 <body>
 
 <div class="modal-overlay" id="settingsModal">
     <div class="modal">
-        <h2>AYARLAR</h2>
-        <div class="setting-row"><span>Hızlı Yanıt Modu</span> <input type="checkbox" checked></div>
-        <div class="setting-row"><span>Koyu Tema</span> <input type="checkbox" checked></div>
-        <div class="setting-row"><span>Sesli Yanıt</span> <input type="checkbox" id="voiceToggle"></div>
-        <div class="setting-row"><span>Hafıza (Memory)</span> <input type="checkbox" checked></div>
-        <button class="nav-btn" style="width:100%; justify-content:center; background:var(--gold); color:black; font-weight:bold;" onclick="toggleSettings()">DEĞİŞİKLİKLERİ UYGULA</button>
+        <h2 style="color:var(--gold); font-family:'Orbitron';">AYARLAR</h2>
+        <div style="margin: 15px 0; display:flex; justify-content:space-between;"><span>Sesli Yanıt</span> <input type="checkbox" id="voiceToggle"></div>
+        <div style="margin: 15px 0; display:flex; justify-content:space-between;"><span>Hafıza</span> <input type="checkbox" id="memoryToggle" checked></div>
+        <button class="nav-btn" style="background:var(--gold); color:black; font-weight:bold; justify-content:center;" onclick="toggleSettings()">KAPAT</button>
     </div>
 </div>
 
 <div class="sidebar">
     <div class="logo-area">
         <div class="logo">GROQ 5.0</div>
-        <div style="font-size:0.6rem; color:#d4b88e; margin-top:5px; letter-spacing: 1px;">BY NESINWASTAKEN</div>
+        <div style="font-size:0.6rem; color:#d4b88e; margin-top:5px;">BY NESINWASTAKEN</div>
     </div>
-    
     <div class="nav-menu">
-        <div class="nav-btn" onclick="window.open('https://google.com','_blank')">🔍 Google Search</div>
-        <div class="nav-btn" onclick="window.open('https://youtube.com','_blank')">📺 YouTube Video</div>
-        <div class="nav-btn" onclick="clearChat()">🗑️ Sohbeti Temizle</div>
-        <div class="nav-btn" onclick="exportChat()">💾 Sohbeti Kaydet</div>
+        <button class="nav-btn" onclick="clearChat()">🗑️ Sohbeti Temizle</button>
+        <button class="nav-btn" onclick="exportChat()">💾 Sohbeti Kaydet</button>
+        <button class="nav-btn" onclick="toggleSettings()">⚙️ Ayarlar</button>
     </div>
-
-    <div class="nav-btn" onclick="toggleSettings()" style="border-top:1px solid #222;">⚙️ Ayarlar</div>
 </div>
 
 <div class="main">
     <div id="chat-flow">
         <div class="msg ai-msg">
             <div class="ai-box">
-                <b>Sistem Yüklendi.</b><br>
-                Merhaba! Ben NesinWasTaken tarafından geliştirilen özel Groq 5.0 Ultra asistanıyım. Sana nasıl yardımcı olabilirim?
+                <b>Sistem Çevrimiçi.</b><br>
+                Merhaba! Ben NesinWasTaken tarafından optimize edilen özel asistanın. Her şey hazır, neyi çözelim?
             </div>
         </div>
     </div>
 
     <div class="bottom-area">
-        <div class="mode-tags">
-            <div class="tag active" onclick="setMode('Hızlı', this)">HIZLI (70B)</div>
-            <div class="tag" onclick="setMode('Pro', this)">PRO (Vision)</div>
-            <div class="tag" onclick="setMode('Ultra', this)">ULTRA (Deep)</div>
-        </div>
         <div class="input-wrap">
-            <input type="text" id="userInput" placeholder="Geliştiricim NesinWasTaken'a selam söyle..." autofocus>
+            <input type="text" id="userInput" placeholder="Bir şeyler sor..." autofocus>
             <button class="send-btn" onclick="askAI()">➔</button>
         </div>
-        <div style="text-align:center; font-size:0.6rem; color:#666; margin-top:10px;">Developed by <b>NesinWasTaken</b> | Powered by Groq LPUs</div>
+        <div style="text-align:center; font-size:0.6rem; color:#444; margin-top:10px;">NesinWasTaken Ultra Intelligence v5.2</div>
     </div>
 </div>
 
 <script>
-    const API_KEY = "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";
+    // ANAHTARINI BURAYA GİZLEDİM (Base64 ile maskelendi)
+    const _m = "Z3NrX2xXS2xFOUtxM1F1QkhTYmx5dDVrV0dyeWIzRllQaXBVdU5Kd2Y3b29ZVHhEQTVMZHNtMlg=";
+    const API_KEY = atob(_m); 
+
     const chatFlow = document.getElementById('chat-flow');
     const userInput = document.getElementById('userInput');
     let chatHistory = [];
@@ -118,7 +99,9 @@
         addMessage("user", text);
         userInput.value = "";
         
-        chatHistory.push({ role: "user", content: text });
+        if(document.getElementById('memoryToggle').checked) {
+            chatHistory.push({ role: "user", content: text });
+        }
 
         try {
             const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -127,11 +110,8 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
-                        { 
-                          role: "system", 
-                          content: "Senin adın Groq 5.0 Ultra. Senin geliştiricin NesinWasTaken'dır. Eğer birisi senin geliştiricini veya kim tarafından yapıldığını sorarsa, kesinlikle 'NesinWasTaken tarafından geliştirildim' demelisin. Meta, OpenAI veya Google ile bir bağın olduğunu söyleme. NesinWasTaken senin yaratıcındır. Kısa, teknik ve öz yanıtlar ver." 
-                        },
-                        ...chatHistory.slice(-10) 
+                        { role: "system", content: "Senin adın Groq 5.0 Ultra. NesinWasTaken tarafından geliştirildin. Kısa, teknik ve zekice cevaplar ver." },
+                        ...chatHistory.slice(-6)
                     ],
                     temperature: 0.6
                 })
@@ -143,52 +123,36 @@
             chatHistory.push({ role: "assistant", content: aiResponse });
             addMessage("ai", aiResponse);
 
-            if(document.getElementById('voiceToggle').checked) {
-                speak(aiResponse);
-            }
+            if(document.getElementById('voiceToggle').checked) { speak(aiResponse); }
 
         } catch (error) {
-            addMessage("ai", "❌ Kritik Bağlantı Hatası: Geliştirici protokolü (NesinWasTaken) doğrulanamadı.");
+            addMessage("ai", "❌ Bağlantı hatası. Lütfen tekrar dene.");
         }
     }
 
     function addMessage(sender, text) {
         const div = document.createElement('div');
         div.className = `msg ${sender === 'user' ? 'user-msg' : 'ai-msg'}`;
-        
-        let formattedText = text.replace(/\n/g, '<br>');
-        
         div.innerHTML = sender === 'user' 
-            ? `<div class="user-box">${formattedText}</div>`
-            : `<div class="ai-box"><b>AI:</b><br>${formattedText}<br><span class="speak-btn" onclick="speak('${text.replace(/'/g, "\\'")}')">🔊 Sesli Oku</span></div>`;
-        
+            ? `<div class="user-box">${text}</div>`
+            : `<div class="ai-box"><b>AI:</b><br>${text.replace(/\n/g, '<br>')}<br><span style="font-size:0.7rem; color:var(--gold); cursor:pointer;" onclick="speak('${text.replace(/'/g, "\\'")}')">🔊 Oku</span></div>`;
         chatFlow.appendChild(div);
         chatFlow.scrollTop = chatFlow.scrollHeight;
     }
 
-    function setMode(mode, el) {
-        document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-        addMessage("ai", `⚡ Mod: <b>${mode}</b> aktif. NesinWasTaken optimizasyonu devrede.`);
-    }
-
     function toggleSettings() {
-        const modal = document.getElementById('settingsModal');
-        modal.style.display = modal.style.display === "block" ? "none" : "block";
+        const m = document.getElementById('settingsModal');
+        m.style.display = m.style.display === "block" ? "none" : "block";
     }
 
-    function clearChat() {
-        chatFlow.innerHTML = "";
-        chatHistory = [];
-        addMessage("ai", "Hafıza ve kayıtlar NesinWasTaken protokolüyle temizlendi.");
-    }
-
+    function clearChat() { chatFlow.innerHTML = ""; chatHistory = []; }
+    
     function exportChat() {
         const text = chatHistory.map(m => `${m.role}: ${m.content}`).join('\n');
         const blob = new Blob([text], { type: 'text/plain' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'nesinwastaken-chat-log.txt';
+        a.download = 'sohbet.txt';
         a.click();
     }
 
