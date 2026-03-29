@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Groq 5.0 Ultra Pro - NesinWasTaken</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Yeni Fontlar Eklendi -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&family=Poppins:wght@300;400;600&family=Roboto+Mono&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root { 
@@ -12,14 +13,14 @@
             --text: #e0e0e0; --text-muted: #8696a0; --msg-user: #005c4b;
             --msg-ai: #202c33; --border: #2a2a2a;
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --main-font: 'Inter', sans-serif;
         }
 
-        /* TEMA SINIFLARI */
         body.theme-sapphire { --gold: #3b82f6; --msg-user: #1e3a8a; }
         body.theme-emerald { --gold: #10b981; --msg-user: #064e3b; }
         
         * { box-sizing: border-box; margin: 0; padding: 0; transition: var(--transition); outline: none; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); display: flex; height: 100vh; width: 100vw; overflow: hidden; }
+        body { font-family: var(--main-font); background-color: var(--bg); color: var(--text); display: flex; height: 100vh; width: 100vw; overflow: hidden; }
 
         /* SIDEBAR */
         .sidebar { 
@@ -43,7 +44,7 @@
         .modal h2 { font-family: 'Orbitron'; margin-bottom: 20px; color: var(--gold); font-size: 1.2rem; }
         .setting-group { margin-bottom: 20px; }
         .setting-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
-        .setting-group input, .setting-group select { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 8px; }
+        .setting-group input, .setting-group select { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 8px; font-family: inherit; }
 
         /* MAIN */
         .main { flex: 1; display: flex; flex-direction: column; position: relative; background: radial-gradient(circle at center, #1a1a1a 0%, var(--bg) 100%); }
@@ -68,7 +69,7 @@
         /* INPUT AREA */
         .bottom-area { position: absolute; bottom: 0; width: 100%; padding: 20px 5%; background: linear-gradient(transparent, var(--bg) 60%); }
         .input-wrap { background: #1e1e1e; border-radius: 35px; display: flex; align-items: center; padding: 6px 15px; border: 1px solid var(--border); }
-        input#userInput { flex: 1; background: transparent; border: none; color: white; padding: 12px; font-size: 1rem; }
+        input#userInput { flex: 1; background: transparent; border: none; color: white; padding: 12px; font-size: 1rem; font-family: inherit; }
         .send-btn { background: var(--gold); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
 
         @keyframes dotPulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.3); opacity: 1; } }
@@ -134,6 +135,15 @@
                 <option value="emerald">Zümrüt Yeşil</option>
             </select>
         </div>
+        <!-- YAZI STİLİ AYARI EKLENDİ -->
+        <div class="setting-group">
+            <label>Yazı Stili (Font)</label>
+            <select id="setFont" onchange="updateFont(this.value)">
+                <option value="'Inter', sans-serif">Modern (Inter)</option>
+                <option value="'Poppins', sans-serif">Yumuşak (Poppins)</option>
+                <option value="'Roboto Mono', monospace">Kodlama (Mono)</option>
+            </select>
+        </div>
         <div class="setting-group" style="display:flex; align-items:center; justify-content:between; gap:10px;">
             <label style="margin:0;">Sesli Yanıt (TTS)</label>
             <input type="checkbox" id="setTTS" style="width:20px; cursor:pointer;">
@@ -151,11 +161,15 @@
     function initApp() {
         const name = localStorage.getItem('g_user') || "Gezgin";
         const theme = localStorage.getItem('g_theme') || "default";
+        const font = localStorage.getItem('g_font') || "'Inter', sans-serif";
         
         document.getElementById('uNameDisp').innerText = name.toUpperCase();
         document.getElementById('setUserName').value = name;
         document.getElementById('setTheme').value = theme;
+        document.getElementById('setFont').value = font;
+        
         updateTheme(theme);
+        updateFont(font);
         renderHistory();
     }
 
@@ -173,9 +187,14 @@
         localStorage.setItem('g_theme', val);
     }
 
+    // FONT GÜNCELLEME FONKSİYONU
+    function updateFont(val) {
+        document.body.style.fontFamily = val;
+        localStorage.setItem('g_font', val);
+    }
+
     function speakText(text) {
         if(!document.getElementById('setTTS').checked) return;
-        // Markdown sembollerini temizle
         const cleanText = text.replace(/[#*`_]/g, '');
         const utterance = new SpeechSynthesisUtterance(cleanText);
         utterance.lang = 'tr-TR';
@@ -187,7 +206,7 @@
         const text = inp.value.trim();
         if(!text) return;
 
-        window.speechSynthesis.cancel(); // Yeni mesaj gelirse eski sesi durdur
+        window.speechSynthesis.cancel();
         document.getElementById('chat-dashboard').style.display = 'none';
         document.getElementById('chat-flow').style.display = 'flex';
         
@@ -214,7 +233,7 @@
             
             document.getElementById('typingStatus').style.display = 'none';
             addMsg("ai", res);
-            speakText(res); // Sesli yanıtı tetikle
+            speakText(res);
             history.push({ role: "assistant", content: res });
             saveChat();
         } catch (e) {
