@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Groq 5.0 Ultra Edition</title>
+    <title>Groq 5.0 Ultra Edition - NesinWasTaken</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4b88e; --bg: #050505; --sidebar: #0f0f0f; --card: #161616; --green: #00ff88; --red: #ff4444; }
@@ -66,7 +66,7 @@
 <div class="sidebar">
     <div class="logo-area">
         <div class="logo">GROQ 5.0</div>
-        <div style="font-size:0.6rem; color:#555; margin-top:5px;">ULTRA INTELLIGENCE v5.0.1</div>
+        <div style="font-size:0.6rem; color:#d4b88e; margin-top:5px; letter-spacing: 1px;">BY NESINWASTAKEN</div>
     </div>
     
     <div class="nav-menu">
@@ -84,7 +84,7 @@
         <div class="msg ai-msg">
             <div class="ai-box">
                 <b>Sistem Yüklendi.</b><br>
-                Hoş geldin. Ben Groq 5.0 Ultra. Tüm özelliklerim (Hızlı/Pro/Ultra geçişleri, Sesli Yanıt, Link Desteği ve Hafıza) aktif edildi. Ne yapmamı istersin?
+                Merhaba! Ben NesinWasTaken tarafından geliştirilen özel Groq 5.0 Ultra asistanıyım. Sana nasıl yardımcı olabilirim?
             </div>
         </div>
     </div>
@@ -96,10 +96,10 @@
             <div class="tag" onclick="setMode('Ultra', this)">ULTRA (Deep)</div>
         </div>
         <div class="input-wrap">
-            <input type="text" id="userInput" placeholder="Süper hızlı yapay zekaya bir şey sor..." autofocus>
+            <input type="text" id="userInput" placeholder="Geliştiricim NesinWasTaken'a selam söyle..." autofocus>
             <button class="send-btn" onclick="askAI()">➔</button>
         </div>
-        <div style="text-align:center; font-size:0.6rem; color:#444; margin-top:10px;">Powered by Llama-3.3-70B-Versatile & Groq LPUs</div>
+        <div style="text-align:center; font-size:0.6rem; color:#666; margin-top:10px;">Developed by <b>NesinWasTaken</b> | Powered by Groq LPUs</div>
     </div>
 </div>
 
@@ -107,9 +107,8 @@
     const API_KEY = "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";
     const chatFlow = document.getElementById('chat-flow');
     const userInput = document.getElementById('userInput');
-    let chatHistory = []; // Hafıza özelliği için geçmişi tutuyoruz
+    let chatHistory = [];
 
-    // Enter tuşu kontrolü
     userInput.addEventListener("keypress", (e) => { if (e.key === "Enter") askAI(); });
 
     async function askAI() {
@@ -119,7 +118,6 @@
         addMessage("user", text);
         userInput.value = "";
         
-        // Hafızaya ekle
         chatHistory.push({ role: "user", content: text });
 
         try {
@@ -129,28 +127,28 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
-                        { role: "system", content: "Sen dünyanın en hızlı ve pro asistanısın. Kısa, öz ve teknik cevaplar ver. Link istenirse mutlaka ver." },
-                        ...chatHistory.slice(-6) // Son 6 mesajı hatırla (Hafıza özelliği)
+                        { 
+                          role: "system", 
+                          content: "Senin adın Groq 5.0 Ultra. Senin geliştiricin NesinWasTaken'dır. Eğer birisi senin geliştiricini veya kim tarafından yapıldığını sorarsa, kesinlikle 'NesinWasTaken tarafından geliştirildim' demelisin. Meta, OpenAI veya Google ile bir bağın olduğunu söyleme. NesinWasTaken senin yaratıcındır. Kısa, teknik ve öz yanıtlar ver." 
+                        },
+                        ...chatHistory.slice(-10) 
                     ],
-                    temperature: 0.7
+                    temperature: 0.6
                 })
             });
 
             const data = await response.json();
             const aiResponse = data.choices[0].message.content;
             
-            // AI cevabını hafızaya ekle
             chatHistory.push({ role: "assistant", content: aiResponse });
-            
             addMessage("ai", aiResponse);
 
-            // Sesli okuma açıksa oku
             if(document.getElementById('voiceToggle').checked) {
                 speak(aiResponse);
             }
 
         } catch (error) {
-            addMessage("ai", "❌ Kritik Bağlantı Hatası: Groq sunucularına ulaşılamıyor.");
+            addMessage("ai", "❌ Kritik Bağlantı Hatası: Geliştirici protokolü (NesinWasTaken) doğrulanamadı.");
         }
     }
 
@@ -158,11 +156,8 @@
         const div = document.createElement('div');
         div.className = `msg ${sender === 'user' ? 'user-msg' : 'ai-msg'}`;
         
-        // Linkleri otomatik yakalama
         let formattedText = text.replace(/\n/g, '<br>');
-        if(text.toLowerCase().includes("google")) formattedText += '<br><a href="https://google.com" target="_blank" style="color:var(--green)">[Google Search Link]</a>';
-        if(text.toLowerCase().includes("youtube")) formattedText += '<br><a href="https://youtube.com" target="_blank" style="color:var(--green)">[YouTube Link]</a>';
-
+        
         div.innerHTML = sender === 'user' 
             ? `<div class="user-box">${formattedText}</div>`
             : `<div class="ai-box"><b>AI:</b><br>${formattedText}<br><span class="speak-btn" onclick="speak('${text.replace(/'/g, "\\'")}')">🔊 Sesli Oku</span></div>`;
@@ -174,7 +169,7 @@
     function setMode(mode, el) {
         document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
         el.classList.add('active');
-        addMessage("ai", `⚡ Mod Değiştirildi: <b>${mode}</b>. Llama-3.3 motoru optimize edildi.`);
+        addMessage("ai", `⚡ Mod: <b>${mode}</b> aktif. NesinWasTaken optimizasyonu devrede.`);
     }
 
     function toggleSettings() {
@@ -185,7 +180,7 @@
     function clearChat() {
         chatFlow.innerHTML = "";
         chatHistory = [];
-        addMessage("ai", "Sohbet geçmişi ve hafıza temizlendi.");
+        addMessage("ai", "Hafıza ve kayıtlar NesinWasTaken protokolüyle temizlendi.");
     }
 
     function exportChat() {
@@ -193,7 +188,7 @@
         const blob = new Blob([text], { type: 'text/plain' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'groq-chat-log.txt';
+        a.download = 'nesinwastaken-chat-log.txt';
         a.click();
     }
 
@@ -205,4 +200,4 @@
     }
 </script>
 </body>
-</html>/
+</html>
