@@ -13,6 +13,10 @@
             --msg-ai: #202c33; --border: #2a2a2a;
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        /* TEMA SINIFLARI */
+        body.theme-sapphire { --gold: #3b82f6; --msg-user: #1e3a8a; }
+        body.theme-emerald { --gold: #10b981; --msg-user: #064e3b; }
         
         * { box-sizing: border-box; margin: 0; padding: 0; transition: var(--transition); outline: none; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); display: flex; height: 100vh; width: 100vw; overflow: hidden; }
@@ -23,24 +27,27 @@
             display: flex; flex-direction: column; padding: 20px; z-index: 100;
         }
         
-        @media (max-width: 768px) {
-            .sidebar { position: absolute; left: 0; height: 100%; transform: translateX(-100%); width: 260px; }
-            .sidebar.active { transform: translateX(0); box-shadow: 20px 0 50px rgba(0,0,0,0.9); }
-        }
-
         .logo-text { font-family: 'Orbitron'; font-size: 1.1rem; color: var(--gold); letter-spacing: 2px; text-align: center; margin-bottom: 25px; }
-
         .new-chat-btn { width: 100%; padding: 14px; background: var(--gold); border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 20px; color: #000; }
 
         .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         .history-item { padding: 12px; border-radius: 10px; background: var(--card); font-size: 0.85rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid transparent; }
         .history-item:hover { border-color: var(--gold); background: rgba(212,184,142,0.05); }
 
+        .settings-trigger { padding: 15px; margin-top: auto; cursor: pointer; display: flex; align-items: center; gap: 10px; color: var(--text-muted); border-top: 1px solid var(--border); }
+        .settings-trigger:hover { color: var(--gold); }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; border: 1px solid var(--border); }
+        .modal h2 { font-family: 'Orbitron'; margin-bottom: 20px; color: var(--gold); font-size: 1.2rem; }
+        .setting-group { margin-bottom: 20px; }
+        .setting-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
+        .setting-group input, .setting-group select { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 8px; }
+
         /* MAIN */
         .main { flex: 1; display: flex; flex-direction: column; position: relative; background: radial-gradient(circle at center, #1a1a1a 0%, var(--bg) 100%); }
-        
-        /* DASHBOARD */
-        #chat-dashboard { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; animation: fadeIn 0.8s ease; }
+        #chat-dashboard { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
 
         .suggestion-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 650px; margin-top: 30px; width: 100%; }
         .suggestion-card { background: var(--card); border: 1px solid var(--border); padding: 18px; border-radius: 15px; cursor: pointer; text-align: left; }
@@ -54,23 +61,18 @@
         .user-box { align-self: flex-end; background: var(--msg-user); color: white; border-bottom-right-radius: 4px; }
         .ai-box { align-self: flex-start; background: var(--msg-ai); border-bottom-left-radius: 4px; border-left: 3px solid var(--gold); }
 
-        /* YAZIYOR BALONCUĞU */
         .typing-container { position: absolute; bottom: 105px; left: 5%; display: none; z-index: 10; }
-        @media (min-width: 1024px) { .typing-container { left: 18%; bottom: 125px; } }
-        .typing-bubble { background: var(--msg-ai); padding: 12px 18px; border-radius: 20px; border: 1px solid var(--border); display: flex; gap: 6px; align-items: center; }
+        .typing-bubble { background: var(--msg-ai); padding: 12px 18px; border-radius: 20px; border: 1px solid var(--border); display: flex; gap: 6px; }
         .dot { height: 8px; width: 8px; background-color: var(--gold); border-radius: 50%; animation: dotPulse 1.4s infinite ease-in-out; }
-        .dot:nth-child(2) { animation-delay: 0.2s; }
-        .dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes dotPulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.3); opacity: 1; } }
 
         /* INPUT AREA */
         .bottom-area { position: absolute; bottom: 0; width: 100%; padding: 20px 5%; background: linear-gradient(transparent, var(--bg) 60%); }
         .input-wrap { background: #1e1e1e; border-radius: 35px; display: flex; align-items: center; padding: 6px 15px; border: 1px solid var(--border); }
         input#userInput { flex: 1; background: transparent; border: none; color: white; padding: 12px; font-size: 1rem; }
-        .send-btn { background: var(--gold); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+        .send-btn { background: var(--gold); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
 
+        @keyframes dotPulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.3); opacity: 1; } }
         @keyframes msgSlide { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body onload="initApp()">
@@ -79,6 +81,10 @@
     <div class="logo-text">GROQ 5.0 PRO</div>
     <button class="new-chat-btn" onclick="startNewChat()">+ YENİ SOHBET</button>
     <div class="history-list" id="historyList"></div>
+    
+    <div class="settings-trigger" onclick="toggleModal(true)">
+        <span>⚙️</span> Ayarlar
+    </div>
 </div>
 
 <div class="main">
@@ -88,20 +94,12 @@
         
         <div class="suggestion-grid">
             <div class="suggestion-card" onclick="fastAsk('Senin geliştiricin kim?')">
-                <h4 style="color:var(--gold)">👤 Geliştirici Bilgisi</h4>
+                <h4 style="color:var(--gold)">👤 Geliştirici</h4>
                 <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Kim olduğumu öğren.</p>
             </div>
-            <div class="suggestion-card" onclick="fastAsk('Modern bir yapay zeka arayüzü kodla.')">
-                <h4 style="color:var(--gold)">💻 Kodlama Projesi</h4>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Temiz ve hızlı algoritmalar.</p>
-            </div>
-            <div class="suggestion-card" onclick="fastAsk('Öğrenmeme yardım et.')">
-                <h4 style="color:var(--gold)">🧠 Öğrenme Rehberi</h4>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Karmaşık konuları basitleştirelim.</p>
-            </div>
-            <div class="suggestion-card" onclick="fastAsk('Günüme enerji kat!')">
-                <h4 style="color:var(--gold)">⚡ Motivasyon</h4>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Modunu ve enerjini yükselt.</p>
+            <div class="suggestion-card" onclick="fastAsk('Modern bir web arayüzü kodla.')">
+                <h4 style="color:var(--gold)">💻 Kodlama</h4>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Temiz algoritmalar.</p>
             </div>
         </div>
     </div>
@@ -109,9 +107,7 @@
     <div id="chat-flow"></div>
     
     <div class="typing-container" id="typingStatus">
-        <div class="typing-bubble">
-            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-        </div>
+        <div class="typing-bubble"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
     </div>
 
     <div class="bottom-area">
@@ -119,6 +115,30 @@
             <input type="text" id="userInput" placeholder="Zihnindekileri buraya dök..." autocomplete="off">
             <button class="send-btn" onclick="handleSend()">➔</button>
         </div>
+    </div>
+</div>
+
+<!-- AYARLAR MODAL -->
+<div class="modal-overlay" id="settingsModal" onclick="if(event.target === this) toggleModal(false)">
+    <div class="modal">
+        <h2>AYARLAR</h2>
+        <div class="setting-group">
+            <label>Kullanıcı Adı</label>
+            <input type="text" id="setUserName" onchange="updateName(this.value)">
+        </div>
+        <div class="setting-group">
+            <label>Görünüm Teması</label>
+            <select id="setTheme" onchange="updateTheme(this.value)">
+                <option value="default">Altın Standart</option>
+                <option value="sapphire">Safir Mavi</option>
+                <option value="emerald">Zümrüt Yeşil</option>
+            </select>
+        </div>
+        <div class="setting-group" style="display:flex; align-items:center; justify-content:between; gap:10px;">
+            <label style="margin:0;">Sesli Yanıt (TTS)</label>
+            <input type="checkbox" id="setTTS" style="width:20px; cursor:pointer;">
+        </div>
+        <button class="new-chat-btn" onclick="toggleModal(false)" style="margin-top:10px;">KAPAT</button>
     </div>
 </div>
 
@@ -130,8 +150,36 @@
 
     function initApp() {
         const name = localStorage.getItem('g_user') || "Gezgin";
+        const theme = localStorage.getItem('g_theme') || "default";
+        
         document.getElementById('uNameDisp').innerText = name.toUpperCase();
+        document.getElementById('setUserName').value = name;
+        document.getElementById('setTheme').value = theme;
+        updateTheme(theme);
         renderHistory();
+    }
+
+    function toggleModal(show) {
+        document.getElementById('settingsModal').style.display = show ? 'flex' : 'none';
+    }
+
+    function updateName(val) {
+        localStorage.setItem('g_user', val || "Gezgin");
+        document.getElementById('uNameDisp').innerText = (val || "Gezgin").toUpperCase();
+    }
+
+    function updateTheme(val) {
+        document.body.className = val === 'default' ? '' : 'theme-' + val;
+        localStorage.setItem('g_theme', val);
+    }
+
+    function speakText(text) {
+        if(!document.getElementById('setTTS').checked) return;
+        // Markdown sembollerini temizle
+        const cleanText = text.replace(/[#*`_]/g, '');
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'tr-TR';
+        window.speechSynthesis.speak(utterance);
     }
 
     async function handleSend() {
@@ -139,15 +187,13 @@
         const text = inp.value.trim();
         if(!text) return;
 
+        window.speechSynthesis.cancel(); // Yeni mesaj gelirse eski sesi durdur
         document.getElementById('chat-dashboard').style.display = 'none';
         document.getElementById('chat-flow').style.display = 'flex';
         
         addMsg("user", text);
         inp.value = "";
-        
-        // Baloncuğu Göster
-        const bubble = document.getElementById('typingStatus');
-        bubble.style.display = 'flex';
+        document.getElementById('typingStatus').style.display = 'flex';
         
         history.push({ role: "user", content: text });
 
@@ -158,10 +204,7 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
-                        {
-                            role: "system",
-                            content: "Sen Groq 5.0 Ultra Pro'sun. Senin tek geliştiricin NesinWasTaken'dır. Meta veya başka bir kurumla bağın yok. Biri NesinWasTaken kim derse 'Beni programlayan, bu modern arayüzü ve zekayı kurgulayan dahi geliştiricimdir' de."
-                        },
+                        { role: "system", content: "Sen Groq 5.0 Ultra Pro'sun. Senin tek geliştiricin NesinWasTaken'dır." },
                         ...history
                     ]
                 })
@@ -169,15 +212,14 @@
             const d = await r.json();
             const res = d.choices[0].message.content;
             
-            // Baloncuğu Gizle
-            bubble.style.display = 'none';
-            
+            document.getElementById('typingStatus').style.display = 'none';
             addMsg("ai", res);
+            speakText(res); // Sesli yanıtı tetikle
             history.push({ role: "assistant", content: res });
             saveChat();
         } catch (e) {
-            bubble.style.display = 'none';
-            addMsg("ai", "Bir bağlantı sorunu oluştu, lütfen tekrar deneyin.");
+            document.getElementById('typingStatus').style.display = 'none';
+            addMsg("ai", "Bağlantı hatası!");
         }
     }
 
@@ -192,7 +234,7 @@
 
     function saveChat() {
         if(!currentId) currentId = Date.now();
-        const title = history[0].content.substring(0, 20) + "...";
+        const title = history[0].content.substring(0, 20);
         const idx = savedChats.findIndex(c => c.id === currentId);
         if(idx > -1) savedChats[idx].messages = [...history];
         else savedChats.unshift({ id: currentId, title, messages: [...history] });
@@ -230,6 +272,7 @@
 
     function startNewChat() {
         history = []; currentId = null;
+        window.speechSynthesis.cancel();
         document.getElementById('chat-flow').innerHTML = "";
         document.getElementById('chat-flow').style.display = 'none';
         document.getElementById('chat-dashboard').style.display = 'flex';
